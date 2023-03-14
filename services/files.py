@@ -1,4 +1,5 @@
-from config.connections import drive_service, client_storage, engine, BUCKET_NAME, FOLDER_ID
+from config.connections import drive_service, client_storage, BUCKET_NAME, FOLDER_ID
+from config.database import engine
 import os
 import pandas as pd
 from sqlalchemy import text
