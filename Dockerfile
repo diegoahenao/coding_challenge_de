@@ -2,13 +2,15 @@ FROM python:3.9
 
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
+COPY requirements.txt /app/requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY . .
+VOLUME ./credentials/credentials.json:/app/credentials/credentials.json
 
-ENV GOOGLE_APPLICATION_CREDENTIALS /app/path/to/key.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/credentials.json
+
+COPY . /app/
 
 EXPOSE 8000
 
