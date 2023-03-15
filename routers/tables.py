@@ -1,0 +1,50 @@
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from schemas.schemas_tables import DepartmentsCreate, JobsCreate, HiredEmployeesCreate
+from config.database import SessionLocal
+from services.tables import Tables
+from typing import List
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
+import logging
+
+logger = logging.getLogger(__name__)
+
+tables_router = APIRouter()
+logger.debug("Inicio --------------->)")
+@tables_router.post('/departments', tags=['tables'], response_model=dict, status_code=201)
+def create_department_api(department: DepartmentsCreate) -> dict:
+    db = SessionLocal()
+    Tables(db).create_department(department)
+    return JSONResponse(status_code=201, content={"message": "Departments registered"})
+logger.debug("Fin --------------->)")
+@tables_router.get('/departments', tags=['tables'], response_model=List[DepartmentsCreate], status_code=200)
+def read_departments_api() -> List[DepartmentsCreate]:
+    db = SessionLocal()
+    result = Tables(db).get_departments()
+    return JSONResponse(status_code=200, content=jsonable_encoder(result))
+
+@tables_router.post('/jobs', tags=['tables'], response_model=dict, status_code=201)
+def create_job_api(job: JobsCreate) -> dict:
+    db = SessionLocal()
+    Tables(db).create_job(job)
+    return JSONResponse(status_code=201, content={"message": "Jobs registered"})
+
+@tables_router.get('/jobs', tags=['tables'], response_model=List[JobsCreate], status_code=200)
+def read_jobs_api() -> List[JobsCreate]:
+    db = SessionLocal()
+    result = Tables(db).get_jobs()
+    return JSONResponse(status_code=200, content=jsonable_encoder(result))
+
+@tables_router.post('/hired_employees', tags=['tables'], response_model=dict, status_code=201)
+def create_hired_employee_api(hired_employee: HiredEmployeesCreate) -> dict:
+    db = SessionLocal()
+    Tables(db).create_hired_employee(hired_employee)
+    return JSONResponse(status_code=201, content={"message": "Hired employees registered"})
+
+@tables_router.get('/hired_employees', tags=['tables'], response_model=List[HiredEmployeesCreate], status_code=200)
+def read_hired_employees_api() -> List[HiredEmployeesCreate]:
+    db = SessionLocal()
+    result = Tables(db).get_hired_employees()
+    return JSONResponse(status_code=200, content=jsonable_encoder(result))
+
