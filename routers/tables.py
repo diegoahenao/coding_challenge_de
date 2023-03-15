@@ -1,14 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from schemas.schemas_tables import DepartmentsCreate, JobsCreate, HiredEmployeesCreate
 from config.database import SessionLocal
 from services.tables import Tables
 from typing import List
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from middlewares.jwt_bearer import JWTBearer
 
 tables_router = APIRouter()
 
-@tables_router.post('/departments', tags=['tables'], response_model=dict, status_code=201)
+@tables_router.post('/departments', tags=['tables'], response_model=dict, status_code=201, dependencies=[Depends(JWTBearer())])
 def create_department_api(department: DepartmentsCreate) -> dict:
     db = SessionLocal()
     Tables(db).create_department(department)
@@ -20,7 +21,7 @@ def read_departments_api() -> List[DepartmentsCreate]:
     result = Tables(db).get_departments()
     return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
-@tables_router.post('/jobs', tags=['tables'], response_model=dict, status_code=201)
+@tables_router.post('/jobs', tags=['tables'], response_model=dict, status_code=201, dependencies=[Depends(JWTBearer())])
 def create_job_api(job: JobsCreate) -> dict:
     db = SessionLocal()
     Tables(db).create_job(job)
@@ -32,7 +33,7 @@ def read_jobs_api() -> List[JobsCreate]:
     result = Tables(db).get_jobs()
     return JSONResponse(status_code=200, content=jsonable_encoder(result))
 
-@tables_router.post('/hired_employees', tags=['tables'], response_model=dict, status_code=201)
+@tables_router.post('/hired_employees', tags=['tables'], response_model=dict, status_code=201, dependencies=[Depends(JWTBearer())])
 def create_hired_employee_api(hired_employee: HiredEmployeesCreate) -> dict:
     db = SessionLocal()
     Tables(db).create_hired_employee(hired_employee)

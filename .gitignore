@@ -4,4 +4,4 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info
-code-challenge-de.json
+credentials/
