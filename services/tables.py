@@ -24,7 +24,7 @@ class Tables():
     def create_job(self, job: JobsCreate):
         new_job = Jobs(**job.dict())
         self.db.add(new_job)
-        self.db.commit()
+        self.db.commit
         self.db.refresh(new_job)
         self.db.close()
         return new_job

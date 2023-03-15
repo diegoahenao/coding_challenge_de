@@ -1,6 +1,5 @@
 from config.database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String
 
 class Departments(Base):
 
@@ -8,7 +7,6 @@ class Departments(Base):
 
     id = Column(Integer, primary_key=True, index=True, unique=True, autoincrement=True)
     department = Column(String, index=True)
-    hired_employees = relationship("HiredEmployees", back_populates="departments")
 
 class Jobs(Base):
 
@@ -16,7 +14,6 @@ class Jobs(Base):
 
     id = Column(Integer, primary_key=True, index=True, unique=True, autoincrement=True)
     job = Column(String, index=True)
-    hired_employees = relationship("HiredEmployees", back_populates="jobs")
 
 class HiredEmployees(Base):
 
@@ -25,8 +22,6 @@ class HiredEmployees(Base):
     id = Column(Integer, primary_key=True, index=True, unique=True, autoincrement=True)
     name = Column(String, index=True)
     datetime = Column(String, index=True)
-    department_id = Column(Integer, ForeignKey("departments.id"))
-    departments = relationship("Departments", back_populates="hired_employees")
-    job_id = Column(Integer, ForeignKey("jobs.id"))
-    jobs =relationship("Jobs", back_populates="hired_employees")
+    department_id = Column(Integer)
+    job_id = Column(Integer)
 
