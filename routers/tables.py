@@ -1,23 +1,19 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter
 from schemas.schemas_tables import DepartmentsCreate, JobsCreate, HiredEmployeesCreate
 from config.database import SessionLocal
 from services.tables import Tables
 from typing import List
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-import logging
-
-logger = logging.getLogger(__name__)
 
 tables_router = APIRouter()
-logger.debug("Inicio --------------->)")
+
 @tables_router.post('/departments', tags=['tables'], response_model=dict, status_code=201)
 def create_department_api(department: DepartmentsCreate) -> dict:
     db = SessionLocal()
     Tables(db).create_department(department)
     return JSONResponse(status_code=201, content={"message": "Departments registered"})
-logger.debug("Fin --------------->)")
+
 @tables_router.get('/departments', tags=['tables'], response_model=List[DepartmentsCreate], status_code=200)
 def read_departments_api() -> List[DepartmentsCreate]:
     db = SessionLocal()
