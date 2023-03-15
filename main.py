@@ -7,6 +7,7 @@ from models.models_tables import Departments, Jobs, HiredEmployees
 from routers.backup import backup_router
 from routers.user import user_router
 from middlewares.error_handler import ErrorHandler
+from routers.queries import queries_router
 
 app = FastAPI()
 app.title = "Code Challenge Data Engineer"
@@ -17,6 +18,7 @@ app.add_middleware(ErrorHandler)
 app.include_router(files_router)
 app.include_router(tables_router)
 app.include_router(backup_router)
+app.include_router(queries_router)
 app.include_router(user_router)
 
 # Create Tables
