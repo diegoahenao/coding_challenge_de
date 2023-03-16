@@ -56,7 +56,11 @@ class Query():
         for row in result:
             output.append({
                 "department": row[0],
-                "num_hired": row[1]
+                "job": row[1],
+                "q1": row[2],
+                "q2": row[3],
+                "q3": row[4],
+                "q4": row[5],
             })
 
         return output
@@ -103,8 +107,9 @@ class Query():
         output = []
         for row in result:
             output.append({
-                "department": row[0],
-                "num_employees_hired": row[1]
+                "id": row[0],
+                "department": row[1],
+                "hired": row[2]
             })
 
         return output
