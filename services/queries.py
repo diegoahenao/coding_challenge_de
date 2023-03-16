@@ -48,7 +48,7 @@ class Query():
             LEFT JOIN (SELECT hired AS Q3, department, job FROM quarters WHERE quarter = 'Q3') q_three
             ON b.department = q_three.department AND b.job = q_three.job
             LEFT JOIN (SELECT hired AS Q4, department, job FROM quarters WHERE quarter = 'Q4') q_four
-            ON b.department = q_four.department AND b.job = q_four.job
+            ON b.department = q_four.department AND b.job = q_four.job;
             """)
         
         result = self.db.execute(query).fetchall()
@@ -64,13 +64,39 @@ class Query():
     def get_query_two(self):
 
         query = text("""
+            WITH group_1 AS (
+                SELECT 
+                    d.id, 
+                    MAX(d.department) AS department, 
+                    COUNT(*) AS hired
+                FROM 
+                    hired_employees AS he
+                LEFT JOIN 
+                    departments AS d
+                ON he.department_id = d.id
+                WHERE (SELECT * FROM EXTRACT(YEAR FROM TO_TIMESTAMP(he.datetime, 'YYYY-MM-DD"T"HH24:MI:SS"Z"'))) = 2021
+                AND d.id IS NOT NULL
+                GROUP BY d.id),
+
+                    group_1_avg AS (
+                        SELECT 
+                            AVG(hired) 
+                        FROM 
+                            group_1
+                    )
+
             SELECT 
-            departments.department, 
-            COUNT(hired_employees.id) AS num_employees_hired
-            FROM departments
-            JOIN hired_employees ON departments.id = hired_employees.department_id
-            GROUP BY departments.department
-            ORDER BY num_employees_hired DESC;
+                d.id, 
+                MAX(d.department) AS department, 
+                COUNT(*) AS hired
+            FROM 
+                hired_employees AS he
+            LEFT JOIN 
+                departments AS d
+            ON he.department_id = d.id
+            GROUP BY d.id
+            HAVING COUNT(*) > (SELECT * FROM group_1_avg)
+            ORDER BY hired DESC
             """)
         
         result = self.db.execute(query).fetchall()
